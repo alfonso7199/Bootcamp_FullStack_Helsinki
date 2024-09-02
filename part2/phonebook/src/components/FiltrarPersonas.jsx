@@ -1,10 +1,11 @@
-const Filter = ({ value, onChange }) => {
+import React from 'react'
+const FiltrarPersonas = ({ value, onChange }) => {
     return (
       <div>
-        filter shown with <input value={value} onChange={onChange} />
+        Filtrar nombre  <input value={value} onChange={onChange} />
       </div>
     )
   }
   
-  export default Filter
+  export default FiltrarPersonas
   
