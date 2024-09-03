@@ -4,6 +4,8 @@ import AddPersona from './components/AddPersona'
 import Personas from './components/Personas'
 import Persona from './components/Persona'
 import personDB from './services/personDB'
+import Notification from './components/Notification';
+
 
 const App = () => {
     const [personas, setPersonas] = useState([])
@@ -11,6 +13,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [newSearch, setNewSearch] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
+    const [notificationType, setNotificationType] = useState(null);
 
 
     useEffect(() => {
@@ -26,16 +29,19 @@ const App = () => {
                 personDB.deletePersona(id)
                     .then(() => {
                         setPersonas(personas.filter(persona => persona.id !== id))
+                        setNotificationType('success');
                         setErrorMessage(`Eliminado ${name}`)
                         setNewName('')
                         setNewNumber('')
                     })
-                    .catch(error => {
+                    .catch((error) => {
+                        setNotificationType('error');
                         setPersonas(personas.filter(persona => persona.id !== id))
-                        setErrorMessage(`InformaCion de ${name} ya ha sido eliminado del servidor`)
+                        setErrorMessage(`Informacion de ${name} ya ha sido eliminado del servidor`)
                     })
                 setTimeout(() => {
                     setErrorMessage(null)
+                    setNotificationType(null);
                 }, 3000)
             }
         }
@@ -57,22 +63,26 @@ const App = () => {
                     .then((updatedPersona) => {
                         setPersonas(
                             personas.map((n) => (n.name === newName ? updatedPersona : n))
-                        );
+                        )
+                        setNotificationType('success');
+                        setErrorMessage(`Cambiado el número de ${personaObject.name}`);
                     })
                     .catch((error) => {
                         console.log(error);
-                        setErrorMessage('Falló el cambio')
-                    });
-                setErrorMessage(`Cambiado el número de ${personaObject.name}`)
+                        setNotificationType('error');
+                        setErrorMessage(`Error: ${personaObject.name} ya ha sido eliminado del servidor.`);
+                    })
             }
         } else {
             personDB
                 .create(personaObject)
                 .then((newPersona) => {
                     setPersonas(personas.concat(newPersona));
-                    setErrorMessage(`Se añadió ${personaObject.name}`);
+                    setNotificationType('success');
+                    setErrorMessage(`Se añadió a ${personaObject.name}`);
                 })
                 .catch((error) => {
+                    setNotificationType('error');
                     setErrorMessage(`${error.response.data.error}`);
                     console.log(error.response.data);
                 });
@@ -81,6 +91,7 @@ const App = () => {
         setNewNumber('');
         setTimeout(() => {
             setErrorMessage(null);
+            setNotificationType(null);
         }, 3000);
 
     };
@@ -96,6 +107,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={errorMessage} type={notificationType} />
             <FiltrarPersonas value={newSearch} onChange={handleSearchChange} />
             <h3>Añadir nuevo contacto</h3>
             <AddPersona
