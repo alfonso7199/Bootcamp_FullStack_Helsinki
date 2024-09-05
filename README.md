@@ -1,4 +1,4 @@
-# Bootcamp - Universidad de Helsinki
+# Fullstack Open Bootcamp - Universidad de Helsinki
 Este repositorio contiene los ejercicios realizados como parte del bootcamp público ofrecido por la Universidad de Helsinki. A lo largo del curso, se irán subiendo mis soluciones a los ejercicios propuestos en cada módulo.
 
 ## Estructura del repositorio
