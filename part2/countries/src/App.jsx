@@ -1,34 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import './App.css'
+import Paises from './components/Paises'
+import DatoPais from './components/DatoPais'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [query, setQuery] = useState('');
+  const [paises, setPaises] = useState([]);
+  const [paisesMostrados, setPaisesMostrados] = useState([]);
+
+
+  useEffect(() => {
+    axios.get('https://restcountries.com/v3.1/all').then((response) => {
+      setPaises(response.data);
+    })
+  }, [])
+
+  const handleQueryChange = (event) => {
+    const search = event.target.value;
+    setQuery(search);
+    setPaisesMostrados(
+      paises.filter((pais) =>
+        pais.name.common.toLowerCase().includes(search.toLowerCase())
+      )
+    )
+  }
 
   return (
-    <>
+    <div>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+        Buscar Paises <input value={query} onChange={handleQueryChange} />
+      </div>  
+      {paisesMostrados.length === 1 ? (
+        <DatoPais pais={paisesMostrados[0]} />
+      ) : null}
+      {paisesMostrados.length > 10 ? (
+        <div>Demasiadas coincidencias, especifica más</div>
+      ) : (
+        <Paises
+          paisesMostrados={paisesMostrados}
+          setPaisesMostrados={setPaisesMostrados}
+        />
+      )}
+    </div>
   )
 }
 
