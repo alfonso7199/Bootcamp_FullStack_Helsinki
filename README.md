@@ -1,7 +1,7 @@
-#Bootcamp - Universidad de Helsinki
+# Bootcamp - Universidad de Helsinki
 Este repositorio contiene los ejercicios realizados como parte del bootcamp público ofrecido por la Universidad de Helsinki. A lo largo del curso, se irán subiendo mis soluciones a los ejercicios propuestos en cada módulo.
 
-##Estructura del repositorio
+## Estructura del repositorio
 El repositorio está organizado en carpetas, cada una correspondiente a un módulo o sección del bootcamp. Dentro de cada carpeta, encontrarás los ejercicios asociados a esa sección, con su respectivo código y en algunos casos notas o comentarios adicionales.
 
 
