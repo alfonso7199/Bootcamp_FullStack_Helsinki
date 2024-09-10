@@ -1,7 +1,17 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 app.use(express.json());
+
+
+morgan.token('body', (req) => {
+    return req.method === 'POST' ? JSON.stringify(req.body) : ''
+  });
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+
+
 
 let persons = [
     { 
@@ -71,7 +81,7 @@ app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const personInd = persons.findIndex(person => person.id === id)
 
-    if(personInd !== 1){
+    if(personInd !== -1){
         persons = persons.filter(person => person.id !== id)
         res.status(204).end()
     } else {
