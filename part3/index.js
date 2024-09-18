@@ -1,8 +1,11 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json());
+
 
 
 morgan.token('body', (req) => {
@@ -36,11 +39,11 @@ let persons = [
     }
 ]
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/personas', (req, res) => {
     res.json(persons);
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/personas/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(person => person.id === id)
 
@@ -51,7 +54,7 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/personas', (req, res) => {
     const body = req.body;
 
     if (!body.name || !body.number) {
@@ -77,7 +80,7 @@ app.post('/api/persons', (req, res) => {
     res.json(newPerson)
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/personas/:id', (req, res) => {
     const id = Number(req.params.id)
     const personInd = persons.findIndex(person => person.id === id)
 
