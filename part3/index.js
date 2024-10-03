@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-const cors = require('cors');
+const cors = require('cors')
+
 
 app.use(cors());
 app.use(express.json());
-
 
 
 morgan.token('body', (req) => {
@@ -16,7 +16,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 
 
-let persons = [
+let personas = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -39,16 +39,20 @@ let persons = [
     }
 ]
 
+app.get('/', (req, res) => {
+    res.send('<h1>Welcome to the Phonebook API</h1>');
+});
+
 app.get('/api/personas', (req, res) => {
-    res.json(persons);
+    res.json(personas);
 })
 
 app.get('/api/personas/:id', (req, res) => {
     const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
+    const persona = persons.find(persona => persona.id === id)
 
-    if(person){
-        res.json(person)
+    if(persona){
+        res.json(persona)
     } else {
         res.status(404).send({ error: 'Person not founf'})
     }
@@ -63,29 +67,29 @@ app.post('/api/personas', (req, res) => {
         })
     }
 
-    const nameExists = persons.some(person => person.name === body.name);
+    const nameExists = personas.some(persona => persona.name === body.name);
     if (nameExists) {
         return res.status(400).json({
             error: 'name must be unique'
         })
     }
 
-    const newPerson = {
+    const newPersona = {
         id: Math.floor(Math.random() * 10000), 
         name: body.name,
         number: body.number
     }
 
-    persons = persons.concat(newPerson)
-    res.json(newPerson)
+    personas = personas.concat(newPersona)
+    res.json(newPersona)
 });
 
 app.delete('/api/personas/:id', (req, res) => {
     const id = Number(req.params.id)
-    const personInd = persons.findIndex(person => person.id === id)
+    const personaInd = personas.findIndex(persona => persona.id === id)
 
-    if(personInd !== -1){
-        persons = persons.filter(person => person.id !== id)
+    if(personaInd !== -1){
+        personas = personas.filter(persona => persona.id !== id)
         res.status(204).end()
     } else {
         res.status(404).send({ error: 'Person not founf'})
@@ -93,17 +97,20 @@ app.delete('/api/personas/:id', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-    const totalPersons = persons.length
+    const totalPersonas = personas.length
 
     res.send(`
         <div>
-            <p>Phonebook has info of ${totalPersons}</p>
+            <p>Phonebook has info of ${totalPersonas}</p>
             <p>${new Date()}</p>
         </div>
         
     `)
 })
 
-const PORT = 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`);
+const PORT = process.env.PORT || 8080
+app.listen(PORT,'0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+
+
+})
