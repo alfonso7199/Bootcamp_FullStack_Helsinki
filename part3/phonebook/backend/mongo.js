@@ -1,13 +1,13 @@
 const mongoose = require('mongoose')
+require('dotenv').config();
 
-if (process.argv.length < 3) {
+
+if (process.argv.length < 2) {
   console.log('give password as argument')
   process.exit(1)
 }
 
-const password = process.argv[2]
-
-const url = `mongodb+srv://alfonsosanchez1799:${password}@cluster0.71bko.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+const url = process.env.MONGODB_URI
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
@@ -18,7 +18,7 @@ const phonebookSchema = new mongoose.Schema({
 
 const Phonebook = mongoose.model('Phonebook', phonebookSchema)
 
-if (process.argv.length === 3) {
+if (process.argv.length === 2) {
     Phonebook.find({}).then(result => {
       console.log('Phonebook:');
       result.forEach(person => {
@@ -28,9 +28,9 @@ if (process.argv.length === 3) {
     });
   }
 
-  if (process.argv.length === 5) {
-    const name = process.argv[3];
-    const number = process.argv[4];
+  if (process.argv.length === 4) {
+    const name = process.argv[2];
+    const number = process.argv[3];
   
     const phonebook = new Phonebook({
       name: name,
