@@ -43,22 +43,33 @@ app.get('/api/personas/:id', (req, res, next) => {
 });
 
 app.post('/api/personas', (req, res, next) => {
-    const body = req.body;
+  const body = req.body;
 
-    if (!body.name || !body.number) {
-        return res.status(400).json({ error: 'name or number is missing' });
-    }
+  if (!body.name || !body.number) {
+      return res.status(400).json({ error: 'name or number is missing' });
+  }
 
-    const phonebookEntry = new Phonebook({
-        name: body.name,
-        number: body.number,
-    });
-
-    phonebookEntry.save()
-        .then(savedEntry => {
-            res.json(savedEntry);
-        })
-        .catch(error => next(error));
+  Phonebook.findOne({ name: body.name })
+      .then(existingEntry => {
+          if (existingEntry) {
+              return Phonebook.findByIdAndUpdate(existingEntry._id, { number: body.number }, { new: true, runValidators: true });
+          } else {
+              const phonebookEntry = new Phonebook({
+                  name: body.name,
+                  number: body.number,
+              });
+              return phonebookEntry.save();
+          }
+      })
+      .then(savedEntry => {
+          res.json(savedEntry);
+      })
+      .catch(error => {
+          if (error.name === 'ValidationError') {
+              return res.status(400).json({ error: error.message });
+          }
+          next(error);
+      });
 });
 
 app.delete('/api/personas/:id', (req, res, next) => {

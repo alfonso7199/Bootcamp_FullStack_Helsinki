@@ -17,10 +17,17 @@ const phonebookSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    minilength: 3,
   },
   number: {
     type: String,
     required: true,
+    validate: {
+      validator: function(v) {
+          return /^\d{2,3}-\d+$/.test(v) && v.length >= 8;
+      },
+      message: props => `${props.value} no es un número de teléfono válido!`,
+  },
   },
 });
 
