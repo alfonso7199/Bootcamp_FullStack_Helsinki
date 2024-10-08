@@ -25,6 +25,8 @@ const App = () => {
 
     const handleDeletePersona = (name, id) => {
         return () => {
+
+            console.log("ID que se intenta eliminar:", id);
             if (window.confirm(`Delete ${name}?`)) {
                 personDB.deletePersona(id)
                     .then(() => {
